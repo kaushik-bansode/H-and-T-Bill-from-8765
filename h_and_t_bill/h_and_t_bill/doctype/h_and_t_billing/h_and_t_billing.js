@@ -27,6 +27,7 @@ frappe.ui.form.on('H and T Billing', {
 });
 frappe.ui.form.on('H and T Billing', {
 	set_item: function(frm) {
+
 		frm.call({
 			method:'selectall',//function name defined in python
 			doc: frm.doc, //current document
@@ -36,25 +37,31 @@ frappe.ui.form.on('H and T Billing', {
 });
 frappe.ui.form.on('H and T Billing', {
 	select_all: function(frm) {
-		frm.call({
-			method:'selectall',//function name defined in python
-			doc: frm.doc, //current document
-		});
+		// console.log("hello")	
+		const value = !frm.doc.h_and_t_table[0].check
+		frm.doc.h_and_t_table.forEach(row=>row.check=value)
+		frm.refresh_field("h_and_t_table")
+		// frm.call({
+		// 	method:'selectall',//function name defined in python
+		// 	doc: frm.doc, //current document
+		// });
 
 	}
 });
 frappe.ui.form.on('H and T Billing', {
 	do_billing: function(frm) {
-		const msg = frappe.msgprint("Loading...")
+		// const msg = frappe.msgprint("Loading...")
 		// $("input, select, textarea, button").prop("disabled", true);
 		// $('<div class="overlay"></div>').appendTo('body').show();
-				
+		
+			
 		frm.clear_table("child_h_and_t_invisible")
 		frm.refresh_field('child_h_and_t_invisible')
 		frm.clear_table("calculation_table")
 		frm.refresh_field('calculation_table')
 		frm.call({
 			method:'get_all_data_calcalation',//function name defined in python
+			freeze: true,	
 			doc: frm.doc, //current document
 			callback:(r)=>{
 				if(!r.exc){
