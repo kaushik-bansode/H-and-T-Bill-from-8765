@@ -500,7 +500,6 @@ class HandTBilling(Document):
 				sales_invoice_deduction_amt= sum(float(d["Outstanding Amount"]) for d in sales_invoices)  # calculating sum of all sales invoice	
 				
     			# calculation for store material
-
 				sales_invoices_store=[{"Sales invoice ID": d_s.name,"Outstanding Amount": d_s.outstanding_amount,"Account": d_s.debit_to,"Contract Id":d_s.h_and_t_contract,"Sale Type":d_s.custom_sale_type}for d_s in deduction_doc if d_s.custom_sale_type == "Store Material"]
 				sales_invoices_store_ded = []
 				if int(len(contract_dict[str(data_calculation_dict[d]["contract_id"])]))>1:

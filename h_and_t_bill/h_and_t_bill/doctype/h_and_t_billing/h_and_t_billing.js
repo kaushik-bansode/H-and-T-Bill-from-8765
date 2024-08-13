@@ -7,6 +7,7 @@ frappe.ui.form.on('H and T Billing', {
 
 	// }
 });
+
 frappe.ui.form.on('H and T Billing', {
 	show_list: function(frm) {
 		const msg1 = frappe.msgprint("Loading...")
@@ -16,6 +17,7 @@ frappe.ui.form.on('H and T Billing', {
 		frm.refresh_field('calculation_table')
 		frm.call({
 			method:'get_data',//function name defined in python
+			freeze:true,
 			doc: frm.doc, //current document
 			callback:(r)=>{
 				frappe.hide_msgprint(msg1)
@@ -25,16 +27,17 @@ frappe.ui.form.on('H and T Billing', {
 
 	}
 });
-frappe.ui.form.on('H and T Billing', {
-	set_item: function(frm) {
 
-		frm.call({
-			method:'selectall',//function name defined in python
-			doc: frm.doc, //current document
-		});
+// frappe.ui.form.on('H and T Billing', {
+// 	set_item: function(frm) {
+// 		frm.call({
+// 			method:'selectall',//function name defined in python
+// 			doc: frm.doc, //current document
+// 		});
 
-	}
-});
+// 	}
+// });
+
 frappe.ui.form.on('H and T Billing', {
 	select_all: function(frm) {
 		// console.log("hello")	
@@ -50,7 +53,7 @@ frappe.ui.form.on('H and T Billing', {
 });
 frappe.ui.form.on('H and T Billing', {
 	do_billing: function(frm) {
-		// const msg = frappe.msgprint("Loading...")
+		const msg = frappe.msgprint("Loading...")
 		// $("input, select, textarea, button").prop("disabled", true);
 		// $('<div class="overlay"></div>').appendTo('body').show();
 		
