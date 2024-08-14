@@ -9,9 +9,11 @@
  "engine": "InnoDB",
  "field_order": [
   "season",
+  "cost_center",
   "from_date",
   "column_break_wyjkv",
   "branch",
+  "posting_date",
   "to_date",
   "column_break_3wqnq",
   "village",
@@ -402,6 +404,18 @@
    "fieldname": "include_penalty_charges",
    "fieldtype": "Check",
    "label": "Include Penalty Charges"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -412,7 +426,7 @@
    "link_fieldname": "custom_h_and_t_billing_id"
   }
  ],
- "modified": "2024-08-12 12:00:21.558942",
+ "modified": "2024-08-14 17:11:05.372030",
  "modified_by": "Administrator",
  "module": "H And T Bill",
  "name": "H and T Billing",

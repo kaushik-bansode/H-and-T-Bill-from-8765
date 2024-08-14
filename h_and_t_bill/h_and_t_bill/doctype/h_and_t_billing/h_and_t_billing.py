@@ -69,6 +69,7 @@ class HandTBilling(Document):
   		@params:self
 		@returns:None
   		"""
+		
 		children = self.get("h_and_t_table")
 		if not children:
 			return
@@ -85,7 +86,7 @@ class HandTBilling(Document):
 	#all record of H and T get collected from from_date to to_date
 	@frappe.whitelist()
 	def get_all_data_calcalation(self):
-     
+		
 		"""
   		It calculates all required data such as deduction, diesel allocation, amount collection
     	according to respective vendor type
@@ -500,6 +501,7 @@ class HandTBilling(Document):
 				sales_invoice_deduction_amt= sum(float(d["Outstanding Amount"]) for d in sales_invoices)  # calculating sum of all sales invoice	
 				
     			# calculation for store material
+
 				sales_invoices_store=[{"Sales invoice ID": d_s.name,"Outstanding Amount": d_s.outstanding_amount,"Account": d_s.debit_to,"Contract Id":d_s.h_and_t_contract,"Sale Type":d_s.custom_sale_type}for d_s in deduction_doc if d_s.custom_sale_type == "Store Material"]
 				sales_invoices_store_ded = []
 				if int(len(contract_dict[str(data_calculation_dict[d]["contract_id"])]))>1:
@@ -1055,7 +1057,7 @@ class HandTBilling(Document):
 		je = frappe.new_doc("Journal Entry")
 		je.voucher_type = "Journal Entry"
 		je.company = company
-		je.posting_date = self.to_date
+		je.posting_date = self.posting_date if self.posting_date else None
 		for s in self.get("calculation_table"):
 			list_data_se = []
 			list_data_lo = []
@@ -1100,7 +1102,11 @@ class HandTBilling(Document):
 								"party_type": "Supplier",
 								"party": s.vender_id,
 								"credit_in_account_currency":total_colle,
-								"contract_id":s.contract_id
+								"contract_id":s.contract_id,
+								"season":self.season,
+								"cost_center":self.cost_center,
+								"branch":self.branch
+
 								
 					},)
 					je.append(
@@ -1110,7 +1116,10 @@ class HandTBilling(Document):
 								"party_type": "Supplier",
 								"party": s.vender_id,
 								"debit_in_account_currency":total_ded,
-								"contract_id":s.contract_id
+								"contract_id":s.contract_id,
+      							  "season":self.season,
+								"cost_center":self.cost_center,
+								"branch":self.branch
 					},)
 					for k in self.get("calculation_table"):
 						if(k.vehicle_type=="BULLOCK CART" and k.vender_id==s.vender_id and k.contract_id==s.contract_id):
@@ -1141,7 +1150,10 @@ class HandTBilling(Document):
 													"credit_in_account_currency": data_se["Outstanding Amount"],
 													"reference_type": "Sales Invoice",
 													"reference_name": data_se["Sales invoice ID"],
-													"contract_id":s.contract_id
+													"contract_id":s.contract_id,
+													"season":self.season,
+													"cost_center":self.cost_center,
+													"branch":self.branch
 												},)
 										else:
 											je.append(
@@ -1153,7 +1165,10 @@ class HandTBilling(Document):
 													"credit_in_account_currency": data_se["Outstanding Amount"],
 													"reference_type": "Sales Invoice",
 													"reference_name": data_se["Sales invoice ID"],
-													"contract_id":s.contract_id
+													"contract_id":s.contract_id,
+													"season":self.season,
+													"cost_center":self.cost_center,
+													"branch":self.branch
 												},)
 							if list_data_store_mat:
 								for data_store in list_data_store_mat:
@@ -1169,7 +1184,10 @@ class HandTBilling(Document):
 													"credit_in_account_currency": data_store["Outstanding Amount"],
 													"reference_type": "Sales Invoice",
 													"reference_name": data_store["Sales invoice ID"],
-													"contract_id":s.contract_id
+													"contract_id":s.contract_id,
+													"season":self.season,
+													"cost_center":self.cost_center,
+													"branch":self.branch
 												},)
 										else:
 											je.append(
@@ -1181,7 +1199,10 @@ class HandTBilling(Document):
 													"credit_in_account_currency": data_store["Outstanding Amount"],
 													"reference_type": "Sales Invoice",
 													"reference_name": data_store["Sales invoice ID"],
-													"contract_id":s.contract_id
+													"contract_id":s.contract_id,
+													"season":self.season,
+													"cost_center":self.cost_center,
+													"branch":self.branch
 												},)
 									
 							if list_data_lo:
@@ -1193,7 +1214,10 @@ class HandTBilling(Document):
 											"party_type": "Customer",
 											"party": s.vender_id,
 											"credit_in_account_currency": data_lo["Installment Amount"],
-											"contract_id":s.contract_id
+											"contract_id":s.contract_id,
+											"season":self.season,
+											"cost_center":self.cost_center,
+											"branch":self.branch
 										},)
 									
 							if list_data_li:
@@ -1207,7 +1231,10 @@ class HandTBilling(Document):
 											"party_type": "Customer",
 											"party": s.vender_id,
 											"credit_in_account_currency": data_li["Installment Interest Amount"],
-											"contract_id":s.contract_id
+											"contract_id":s.contract_id,
+											"season":self.season,
+											"cost_center":self.cost_center,
+											"branch":self.branch
 										},)
 							
 										
@@ -1221,7 +1248,10 @@ class HandTBilling(Document):
 												"party_type": "Supplier",
 												"party": s.vender_id,
 												"credit_in_account_currency": data_od["Deduction Amount"],
-												"contract_id":s.contract_id
+												"contract_id":s.contract_id,
+												"season":self.season,
+												"cost_center":self.cost_center,
+												"branch":self.branch
 											},)		
 
 							if list_data_tds:
@@ -1234,7 +1264,10 @@ class HandTBilling(Document):
 												"party_type": "Supplier",
 												"party": s.vender_id,
 												"credit_in_account_currency": data_od["TDS Deduction Amount"],
-												"contract_id":s.contract_id
+												"contract_id":s.contract_id,
+												"season":self.season,
+												"cost_center":self.cost_center,
+												"branch":self.branch
 											},) 
 							if list_data_sd:
 								for data_od in list_data_sd:
@@ -1246,7 +1279,10 @@ class HandTBilling(Document):
 												"party_type": "Supplier",
 												"party": s.vender_id,
 												"credit_in_account_currency": data_od["SD Deduction Amount"],
-												"contract_id":s.contract_id
+												"contract_id":s.contract_id,
+												"season":self.season,
+												"cost_center":self.cost_center,
+												"branch":self.branch
 											},) 
 							if list_data_hr:
 								for data_od in list_data_hr:
@@ -1258,7 +1294,10 @@ class HandTBilling(Document):
 												"party_type": "Supplier",
 												"party": s.vender_id,
 												"credit_in_account_currency": data_od["Hire Charge Amount"],
-												"contract_id":s.contract_id
+												"contract_id":s.contract_id,
+												"season":self.season,
+												"cost_center":self.cost_center,
+												"branch":self.branch
 											},) 
 							if list_data_pen:
 								for data_od in list_data_pen:
@@ -1270,7 +1309,10 @@ class HandTBilling(Document):
 												"party_type": "Supplier",
 												"party": s.vender_id,
 												"credit_in_account_currency": data_od["Penalty Amount"],
-												"contract_id":s.contract_id
+												"contract_id":s.contract_id,
+												"season":self.season,
+												"cost_center":self.cost_center,
+												"branch":self.branch
 											},) 
 				else:
 					if(s.vehicle_type!="BULLOCK CART"):
@@ -1288,7 +1330,10 @@ class HandTBilling(Document):
 									"party_type": "Supplier",
 									"party": s.vender_id,
 									"credit_in_account_currency": s.total,
-									"contract_id":s.contract_id
+									"contract_id":s.contract_id,
+									"season":self.season,
+									"cost_center":self.cost_center,
+									"branch":self.branch
 									
 								},)
 							je.append(
@@ -1298,7 +1343,10 @@ class HandTBilling(Document):
 									"party_type": "Supplier",
 									"party": s.vender_id,
 									"debit_in_account_currency": s.deduction,
-									"contract_id":s.contract_id
+									"contract_id":s.contract_id,
+									"season":self.season,
+									"cost_center":self.cost_center,
+									"branch":self.branch
 									
 								},)
 							
@@ -1316,7 +1364,10 @@ class HandTBilling(Document):
 									"party_type": "Supplier",
 									"party": s.vender_id,
 									"credit_in_account_currency": s.total,
-									"contract_id":s.contract_id
+									"contract_id":s.contract_id,
+									"season":self.season,
+									"cost_center":self.cost_center,
+									"branch":self.branch
 									
 								},)
 							je.append(
@@ -1326,7 +1377,10 @@ class HandTBilling(Document):
 									"party_type": "Supplier",
 									"party": s.vender_id,
 									"debit_in_account_currency": s.deduction,
-									"contract_id":s.contract_id
+									"contract_id":s.contract_id,
+									"season":self.season,
+									"cost_center":self.cost_center,
+									"branch":self.branch
 									
 								},)
 				if(s.vehicle_type!="BULLOCK CART"):
@@ -1344,7 +1398,10 @@ class HandTBilling(Document):
 											"credit_in_account_currency": data_se["Outstanding Amount"],
 											"reference_type": "Sales Invoice",
 											"reference_name": data_se["Sales invoice ID"],
-											"contract_id":s.contract_id
+											"contract_id":s.contract_id,
+											"season":self.season,
+											"cost_center":self.cost_center,
+											"branch":self.branch
 										},)
 								else:
 									je.append(
@@ -1356,7 +1413,10 @@ class HandTBilling(Document):
 											"credit_in_account_currency": data_se["Outstanding Amount"],
 											"reference_type": "Sales Invoice",
 											"reference_name": data_se["Sales invoice ID"],
-											"contract_id":s.contract_id
+											"contract_id":s.contract_id,
+											"season":self.season,
+											"cost_center":self.cost_center,
+											"branch":self.branch
 										},)
 					if list_data_store_mat:
 						for data_store in list_data_store_mat:
@@ -1372,7 +1432,10 @@ class HandTBilling(Document):
 											"credit_in_account_currency": data_store["Outstanding Amount"],
 											"reference_type": "Sales Invoice",
 											"reference_name": data_store["Sales invoice ID"],
-											"contract_id":s.contract_id
+											"contract_id":s.contract_id,
+											"season":self.season,
+											"cost_center":self.cost_center,
+											"branch":self.branch
 										},)
 								else:
 									je.append(
@@ -1384,7 +1447,10 @@ class HandTBilling(Document):
 											"credit_in_account_currency": data_store["Outstanding Amount"],
 											"reference_type": "Sales Invoice",
 											"reference_name": data_store["Sales invoice ID"],
-											"contract_id":s.contract_id
+											"contract_id":s.contract_id,
+											"season":self.season,
+											"cost_center":self.cost_center,
+											"branch":self.branch
 										},)
 							
 					if list_data_lo:
@@ -1396,7 +1462,10 @@ class HandTBilling(Document):
 									"party_type": "Customer",
 									"party": s.vender_id,
 									"credit_in_account_currency": data_lo["Installment Amount"],
-									"contract_id":s.contract_id
+									"contract_id":s.contract_id,
+									"season":self.season,
+									"cost_center":self.cost_center,
+									"branch":self.branch
 								},)
 							
 					if list_data_li:
@@ -1409,7 +1478,10 @@ class HandTBilling(Document):
 										"party_type": "Customer",
 										"party": s.vender_id,
 										"credit_in_account_currency": data_li["Installment Interest Amount"],
-										"contract_id":s.contract_id
+										"contract_id":s.contract_id,
+										"season":self.season,
+										"cost_center":self.cost_center,
+										"branch":self.branch
 									},)
 					
 								
@@ -1423,7 +1495,10 @@ class HandTBilling(Document):
 										"party_type": "Supplier",
 										"party": s.vender_id,
 										"credit_in_account_currency": data_od["Deduction Amount"],
-										"contract_id":s.contract_id
+										"contract_id":s.contract_id,
+										"season":self.season,
+										"cost_center":self.cost_center,
+										"branch":self.branch
 									},)		
 
 					if list_data_tds:
@@ -1436,7 +1511,10 @@ class HandTBilling(Document):
 										"party_type": "Supplier",
 										"party": s.vender_id,
 										"credit_in_account_currency": data_od["TDS Deduction Amount"],
-										"contract_id":s.contract_id
+										"contract_id":s.contract_id,
+										"season":self.season,
+										"cost_center":self.cost_center,
+										"branch":self.branch
 									},) 
 					if list_data_sd:
 						for data_od in list_data_sd:
@@ -1448,7 +1526,10 @@ class HandTBilling(Document):
 										"party_type": "Supplier",
 										"party": s.vender_id,
 										"credit_in_account_currency": data_od["SD Deduction Amount"],
-										"contract_id":s.contract_id
+										"contract_id":s.contract_id,
+										"season":self.season,
+										"cost_center":self.cost_center,
+										"branch":self.branch
 									},) 
 					if list_data_hr:
 						for data_od in list_data_hr:
@@ -1460,7 +1541,10 @@ class HandTBilling(Document):
 										"party_type": "Supplier",
 										"party": s.vender_id,
 										"credit_in_account_currency": data_od["Hire Charge Amount"],
-										"contract_id":s.contract_id
+										"contract_id":s.contract_id,
+										"season":self.season,
+										"cost_center":self.cost_center,
+										"branch":self.branch
 									},) 
 					if list_data_pen:
 						for data_od in list_data_pen:
@@ -1472,7 +1556,10 @@ class HandTBilling(Document):
 										"party_type": "Supplier",
 										"party": s.vender_id,
 										"credit_in_account_currency": data_od["Penalty Amount"],
-										"contract_id":s.contract_id
+										"contract_id":s.contract_id,
+										"season":self.season,
+										"cost_center":self.cost_center,
+										"branch":self.branch
 									},) 
 				
 			else:
@@ -1492,7 +1579,10 @@ class HandTBilling(Document):
 								"party_type": "Supplier",
 								"party": s.vender_id,
 								"credit_in_account_currency":total_colle,
-								"contract_id":s.contract_id
+								"contract_id":s.contract_id,
+								"season":self.season,
+								"cost_center":self.cost_center,
+								"branch":self.branch
 								
 					},)
 				else:
@@ -1511,7 +1601,10 @@ class HandTBilling(Document):
 									"party_type": "Supplier",
 									"party": s.vender_id,
 									"credit_in_account_currency": s.total,
-									"contract_id":s.contract_id
+									"contract_id":s.contract_id,
+									"season":self.season,
+									"cost_center":self.cost_center,
+									"branch":self.branch
 								
 								},)
 						else:
@@ -1528,11 +1621,14 @@ class HandTBilling(Document):
 									"party_type": "Supplier",
 									"party": s.vender_id,
 									"credit_in_account_currency": s.total,
-									"contract_id":s.contract_id
+									"contract_id":s.contract_id,
+									"season":self.season,
+									"cost_center":self.cost_center,
+									"branch":self.branch
 								
 								},)
-		lst1 = [{"debit":j.debit_in_account_currency,"account":j.account} for j in je.accounts]
-		lst2 = [{"credit":j.credit_in_account_currency,"account":j.account} for j in je.accounts]
+		lst1 = [{"debit":j.debit_in_account_currency,"account":j.account,"contract_id":j.contract_id} for j in je.accounts]
+		lst2 = [{"credit":j.credit_in_account_currency,"account":j.account,"contract_id":j.contract_id} for j in je.accounts]
 		lst3 = []
 		for i in range(0,len(lst1)):
 			if lst1[i]["debit"]:
@@ -1549,11 +1645,12 @@ class HandTBilling(Document):
 		# frappe.throw(str(list_data_store_mat))
 		# frappe.throw(str(lst1)+" ==== "+ str(lst2))
 		if counter > 0:
-			# frappe.throw(str(lst3))
+			frappe.msgprint(str(lst3))
 			je.insert()
 			je.custom_h_and_t_billing_id = self.name
 			je.save()
 			self.journal_entry_id = str(je.name)
+			je.save()
 			je.submit()
 
 	def update_value_in_farmer_loan(self):

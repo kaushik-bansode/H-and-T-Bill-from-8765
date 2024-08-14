@@ -3,9 +3,34 @@
 
 
 frappe.ui.form.on('H and T Billing', {
-	// refresh: function(frm) {
+	refresh: function(frm) {
+		const show_list_btn = frm.fields_dict['show_list'].$wrapper.find('button');
+		const select_all_btn = frm.fields_dict['select_all'].$wrapper.find('button');
+		const do_billing_btn = frm.fields_dict['do_billing'].$wrapper.find('button');
+		show_list_btn.css({
+			"color": "#007bff",
+			"border":"1px solid #007bff",
+			"letter-spacing":"1px",
+			"width":"6rem",
+			"padding":"0.5rem"
+			
 
-	// }
+		});
+		select_all_btn.css({
+			"background-color": "#007bff",
+			"color": "white",
+			"letter-spacing":"1px",
+			"width":"8rem",
+			"margin-left":"1.5rem",
+			"padding":"0.53rem"
+		});
+		
+		do_billing_btn.css({
+			"background-color": "#007bff",
+			"color": "white",
+			"padding":"0.53rem"
+		})
+	}
 });
 
 frappe.ui.form.on('H and T Billing', {
@@ -40,11 +65,14 @@ frappe.ui.form.on('H and T Billing', {
 
 frappe.ui.form.on('H and T Billing', {
 	select_all: function(frm) {
-		// console.log("hello")	
 		const value = !frm.doc.h_and_t_table[0].check
 		frm.doc.h_and_t_table.forEach(row=>row.check=value)
 		frm.refresh_field("h_and_t_table")
-		// frm.call({
+		const button = frm.fields_dict['select_all'].$wrapper.find('button');
+		const allSelected = value;
+		const buttonText = allSelected ? 'DeSelect All' : 'Select All';
+		button.text(buttonText);
+		
 		// 	method:'selectall',//function name defined in python
 		// 	doc: frm.doc, //current document
 		// });
