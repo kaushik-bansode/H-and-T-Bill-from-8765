@@ -13,9 +13,8 @@ frappe.ui.form.on('H and T Billing', {
 			"letter-spacing":"1px",
 			"width":"6rem",
 			"padding":"0.5rem"
-			
-
 		});
+
 		select_all_btn.css({
 			"background-color": "#007bff",
 			"color": "white",
@@ -28,8 +27,16 @@ frappe.ui.form.on('H and T Billing', {
 		do_billing_btn.css({
 			"background-color": "#007bff",
 			"color": "white",
-			"padding":"0.53rem"
-		})
+			"padding": "0.53rem",
+			
+		});
+		if(frm.doc.docstatus == 0){
+			frm.add_custom_button(__('Do Billing'), function() {
+				frm.trigger('do_billing');
+			}).addClass('btn-primary');
+		}
+		
+		
 	}
 });
 
@@ -59,7 +66,6 @@ frappe.ui.form.on('H and T Billing', {
 // 			method:'selectall',//function name defined in python
 // 			doc: frm.doc, //current document
 // 		});
-
 // 	}
 // });
 
@@ -81,7 +87,7 @@ frappe.ui.form.on('H and T Billing', {
 });
 frappe.ui.form.on('H and T Billing', {
 	do_billing: function(frm) {
-		const msg = frappe.msgprint("Loading...")
+		// const msg = frappe.msgprint("Loading...")
 		// $("input, select, textarea, button").prop("disabled", true);
 		// $('<div class="overlay"></div>').appendTo('body').show();
 		
@@ -96,7 +102,7 @@ frappe.ui.form.on('H and T Billing', {
 			doc: frm.doc, //current document
 			callback:(r)=>{
 				if(!r.exc){
-					frappe.hide_msgprint(msg);
+					// frappe.hide_msgprint(msg);
 					frappe.show_alert({
 						message:__('Data Loaded Successfully'),
 						indicator:'green'
@@ -114,7 +120,13 @@ frappe.ui.form.on('H and T Billing', {
     refresh: function(frm) {
         $('.layout-side-section').hide();
         $('.layout-main-section-wrapper').css('margin-left', '0');
-    }
+    },
+	purpose: async function(frm){
+		if(frm.doc.purpose){
+			const narration = await frappe.db.get_value("Standard Naration",{"name":frm.doc.purpose},"narration")
+			frm.set_value("narration",narration["message"]["narration"])
+		}
+	}
 });
 
 // frappe.ui.form.on('H and T Billing', {

@@ -34,6 +34,7 @@
   "select_all",
   "column_break_i8otr",
   "column_break_gcgw9",
+  "do_billing",
   "column_break_ounss",
   "column_break_uljsl",
   "column_break_q2afk",
@@ -42,9 +43,10 @@
   "section_break_lgqma",
   "h_and_t_table",
   "section_break_b9fs3",
-  "do_billing",
   "section_break_tsbtf",
+  "tab_break_g2jfu",
   "child_h_and_t_invisible",
+  "calculation_table_tab",
   "section_break_4vr7z",
   "calculation_table",
   "section_break_m3fha",
@@ -65,8 +67,10 @@
   "net_total_pay_har",
   "section_break_laear",
   "net_total_wight_bul",
+  "purpose",
   "column_break_ulodu",
   "net_total_collection_bul",
+  "narration",
   "column_break_udi6k",
   "net_total_ded_bul",
   "column_break_pock0",
@@ -156,7 +160,6 @@
    "label": "H & T Table"
   },
   {
-   "allow_bulk_edit": 1,
    "fieldname": "h_and_t_table",
    "fieldtype": "Table",
    "options": "Child H and T Data"
@@ -168,6 +171,7 @@
   {
    "fieldname": "do_billing",
    "fieldtype": "Button",
+   "hidden": 1,
    "label": "Do Billing"
   },
   {
@@ -256,8 +260,7 @@
   {
    "fieldname": "new_total_weight",
    "fieldtype": "Float",
-   "label": "Net Total Weight",
-   "precision": "3"
+   "label": "Net Total Weight"
   },
   {
    "fieldname": "column_break_knkwk",
@@ -307,8 +310,7 @@
   {
    "fieldname": "net_total_weight_har",
    "fieldtype": "Float",
-   "label": "Net Total Weight",
-   "precision": "3"
+   "label": "Net Total Weight"
   },
   {
    "fieldname": "column_break_yzblj",
@@ -345,8 +347,7 @@
   {
    "fieldname": "net_total_wight_bul",
    "fieldtype": "Float",
-   "label": "Net Total Weight",
-   "precision": "3"
+   "label": "Net Total Weight"
   },
   {
    "fieldname": "column_break_ulodu",
@@ -414,8 +415,28 @@
   {
    "fieldname": "posting_date",
    "fieldtype": "Date",
-   "label": "Posting Date",
-   "reqd": 1
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "tab_break_g2jfu",
+   "fieldtype": "Tab Break",
+   "label": "Child H and T invisible"
+  },
+  {
+   "fieldname": "calculation_table_tab",
+   "fieldtype": "Tab Break",
+   "label": "Calculation Table"
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Link",
+   "label": "Purpose",
+   "options": "Standard Naration"
+  },
+  {
+   "fieldname": "narration",
+   "fieldtype": "Small Text",
+   "label": "Narration"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -426,7 +447,7 @@
    "link_fieldname": "custom_h_and_t_billing_id"
   }
  ],
- "modified": "2024-08-14 17:11:05.372030",
+ "modified": "2024-12-09 10:05:45.834053",
  "modified_by": "Administrator",
  "module": "H And T Bill",
  "name": "H and T Billing",
